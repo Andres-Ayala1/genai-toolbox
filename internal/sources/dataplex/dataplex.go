@@ -117,7 +117,7 @@ func initDataplexConnection(
 
 	cred, err := google.FindDefaultCredentials(ctx)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to find default Google Cloud credentials: %w", err)
+		return nil, nil, fmt.Errorf("failed to find default Google Cloud credentials for project %q: %w", project, err)
 	}
 
 	userAgent, err := util.UserAgentFromContext(ctx)
@@ -252,14 +252,14 @@ func (s *Source) SearchEntries(ctx context.Context, query string, pageSize int, 
 	return results, nil
 }
 
-func (s *Source) SearchDataQualityScans(ctx context.Context, query string, pageSize int, orderBy string) ([]*dataplexpb.DataScan, error) {
+func (s *Source) SearchDataQualityScans(ctx context.Context, filter string, pageSize int, orderBy string) ([]*dataplexpb.DataScan, error) {
 	// ListDataScansRequest doesn't support generic specific "query" field like SearchEntries,
 	// but it supports "filter".  We will assume `query` is passed as filter.
 	// If the user wants to search by name/display_name they should provide a filter string.
 	// Example filter: "display_name = \"my-scan\""
 	req := &dataplexpb.ListDataScansRequest{
 		Parent:   fmt.Sprintf("projects/%s/locations/-", s.ProjectID()),
-		Filter:   query,
+		Filter:   filter,
 		PageSize: int32(pageSize),
 		OrderBy:  orderBy,
 	}
