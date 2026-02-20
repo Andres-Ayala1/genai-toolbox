@@ -40,9 +40,9 @@ import (
 )
 
 var (
-	DataplexSourceType                = "dataplex"
-	DataplexSearchEntriesToolType     = "dataplex-search-entries"
-	DataplexLookupEntryToolType       = "dataplex-lookup-entry"
+	DataplexSourceType                     = "dataplex"
+	DataplexSearchEntriesToolType          = "dataplex-search-entries"
+	DataplexLookupEntryToolType            = "dataplex-lookup-entry"
 	DataplexSearchAspectTypesToolType      = "dataplex-search-aspect-types"
 	DataplexSearchDataQualityScansToolType = "dataplex-search-dq-scans"
 	DataplexProject                        = os.Getenv("DATAPLEX_PROJECT")
@@ -139,7 +139,6 @@ func cleanupOldAspectTypes(t *testing.T, ctx context.Context, client *dataplex.C
 		}
 	}
 }
-
 
 func setupDataplexSearchDataQualityScan(t *testing.T, ctx context.Context, client *dataplex.DataScanClient, dataScanId string, datasetName string, tableName string) func(*testing.T) {
 	parent := fmt.Sprintf("projects/%s/locations/us-central1", DataplexProject)
@@ -241,7 +240,7 @@ func TestDataplexToolEndpoints(t *testing.T) {
 	teardownTable1 := setupBigQueryTable(t, ctx, bigqueryClient, datasetName, tableName)
 	teardownAspectType1 := setupDataplexThirdPartyAspectType(t, ctx, dataplexClient, aspectTypeId)
 	teardownDataScan1 := setupDataplexSearchDataQualityScan(t, ctx, dataplexDataScanClient, dataScanId, datasetName, tableName)
-	
+
 	time.Sleep(2 * time.Minute) // wait for table and aspect type to be ingested
 	defer teardownTable1(t)
 	defer teardownAspectType1(t)
